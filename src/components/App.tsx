@@ -1,11 +1,28 @@
-import { useState } from 'react'
+import esbuild from 'esbuild-wasm'
+import { useState, useEffect, useRef } from 'react'
+
+console.log(esbuild)
 
 const App = () => {
   const [input, setInput] = useState('')
   const [code, setCode] = useState('')
 
-  const onClick = () => {
-    console.log(input)
+  const startService = async () => {
+    await esbuild.initialize({
+      worker: true,
+      wasmURL: 'https://unpkg.com/esbuild-wasm@0.14.23/esbuild.wasm'
+    })
+  }
+
+  useEffect(() => { startService() }, [])
+
+  const onClick = async () => {
+    const result = await esbuild.transform(input, {
+      loader: 'jsx',
+      target: 'es2015'
+    })
+
+    setCode(result.code)
   }
 
   return (
