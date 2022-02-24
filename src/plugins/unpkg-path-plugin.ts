@@ -1,6 +1,11 @@
 import * as esbuild from 'esbuild-wasm'
+import localForage from 'localforage'
 
 const baseUrl = 'https://unpkg.com'
+
+const fileCache = localForage.createInstance({
+  name: 'filecache'
+})
      
 export const unpkgPathPlugin = () => {
   return {
@@ -34,13 +39,21 @@ export const unpkgPathPlugin = () => {
           }
         }
 
+        const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
+
+        if (cached) return cached
+
         const response = await fetch(args.path)
 
-        return {
+        const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: await response.text(),
           resolveDir: new URL('./', response.url).pathname
         }
+
+        await fileCache.setItem(args.path, result)
+
+        return result
       })
     },
   }
