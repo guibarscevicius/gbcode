@@ -17,14 +17,25 @@ export const fetchPlugin = (input: string) => {
           }
         }
 
-        const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
-        if (cached) return cached
+        // const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
+        // if (cached) return cached
 
         const response = await fetch(args.path)
+        const data = await response.text()
+
+        const contents = args.path.match(/.css$/)
+          ? `
+            const style = document.createElement('style')
+            style.innerText = '${data
+              .replace(/\n/g, '')
+              .replace(/"/g, '\\')
+              .replace(/'/g, "\\'")
+            }'
+          ` : data
 
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
-          contents: await response.text(),
+          contents,
           resolveDir: new URL('./', response.url).pathname
         }
 
