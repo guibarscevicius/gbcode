@@ -44,11 +44,10 @@ export const fetchPlugin = (input: string) => {
         if (cached) return cached
 
         const response = await fetch(args.path)
-        const data = await response.text()
 
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
-          contents: data,
+          contents: await response.text(),
           resolveDir: new URL('./', response.url).pathname
         }
 
