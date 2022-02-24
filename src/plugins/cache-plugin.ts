@@ -9,10 +9,9 @@ export const cachePlugin = () => {
   return {
     name: 'cache-plugin',
     setup(build: esbuild.PluginBuild) {
-      build.onLoad({ filter: /.*/ }, async (args: any) => {
-        const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
-        if (cached) return cached
-      })
+      build.onLoad({ filter: /.*/ }, async (args: any) =>
+        await fileCache.getItem<esbuild.OnLoadResult>(args.path)
+      )
     }
   }
 }
