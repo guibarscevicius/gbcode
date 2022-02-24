@@ -1,7 +1,7 @@
 import esbuild from 'esbuild-wasm'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
-console.log(esbuild)
+import { unpkgPathPlugin } from '../plugins/unpkg-path-plugin'
 
 const App = () => {
   const [input, setInput] = useState('')
@@ -17,12 +17,14 @@ const App = () => {
   useEffect(() => { startService() }, [])
 
   const onClick = async () => {
-    const result = await esbuild.transform(input, {
-      loader: 'jsx',
-      target: 'es2015'
+    const result = await esbuild.build({
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin()],
     })
 
-    setCode(result.code)
+    setCode(result.outputFiles[0].text)
   }
 
   return (
