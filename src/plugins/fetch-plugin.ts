@@ -12,10 +12,12 @@ export const fetchPlugin = (input: string) => {
       build.onLoad({ filter: /^index\.js$/ },
         () => ({ loader: 'jsx', contents: input }))
 
-      build.onLoad({ filter: /.css$/ }, async (args: any) => {
+      build.onLoad({ filter: /.*/ }, async (args: any) => {
         const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
         if (cached) return cached
+      })
 
+      build.onLoad({ filter: /.css$/ }, async (args: any) => {
         const response = await fetch(args.path)
         const data = await response.text()
 
@@ -40,9 +42,6 @@ export const fetchPlugin = (input: string) => {
       })
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
-        const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
-        if (cached) return cached
-
         const response = await fetch(args.path)
 
         const result: esbuild.OnLoadResult = {
