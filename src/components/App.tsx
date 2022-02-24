@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { unpkgPathPlugin } from '../plugins/unpkg-path-plugin'
 import { fetchPlugin } from '../plugins/fetch-plugin'
+import { cachePlugin } from '../plugins/cache-plugin'
 
 const App = () => {
   const [input, setInput] = useState('')
@@ -22,7 +23,7 @@ const App = () => {
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
+      plugins: [unpkgPathPlugin(), cachePlugin(), fetchPlugin(input)],
       define: {
         'process.env.NODE_ENV': '"production"',
         global: 'window',

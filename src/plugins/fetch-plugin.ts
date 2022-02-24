@@ -1,9 +1,6 @@
 import * as esbuild from 'esbuild-wasm'
-import localForage from 'localforage'
 
-const fileCache = localForage.createInstance({
-  name: 'filecache'
-})
+import { fileCache } from './cache-plugin'
 
 export const fetchPlugin = (input: string) => {
   return {
@@ -11,11 +8,6 @@ export const fetchPlugin = (input: string) => {
     setup(build: esbuild.PluginBuild) {
       build.onLoad({ filter: /^index\.js$/ },
         () => ({ loader: 'jsx', contents: input }))
-
-      build.onLoad({ filter: /.*/ }, async (args: any) => {
-        const cached = await fileCache.getItem<esbuild.OnLoadResult>(args.path)
-        if (cached) return cached
-      })
 
       build.onLoad({ filter: /.css$/ }, async (args: any) => {
         const response = await fetch(args.path)
