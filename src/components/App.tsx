@@ -19,6 +19,8 @@ const App = () => {
   useEffect(() => { startService() }, [])
 
   const onClick = async () => {
+    iframe.current.srcdoc = html
+
     const result = await esbuild.build({
       entryPoints: ['index.js'],
       bundle: true,
@@ -40,7 +42,16 @@ const App = () => {
         <div id="root"></div>
         <script>
           window.addEventListener('message', (event) => {
-            eval(event.data)
+            try {
+              eval(event.data)
+            } catch (err) {
+              document.querySelector('#root')
+                .innerHTML = '<div style="color: red">'
+                   + '<h4>Runtime error</h4>'
+                   + '<p>' + err + '</p>'
+                + '</div>'
+              console.error(error)
+            }
           }, false)
         </script>
       </body>
@@ -60,7 +71,7 @@ const App = () => {
 
       <iframe
         ref={iframe}
-        title="code"
+        title="preview"
         sandbox="allow-scripts"
         srcDoc={html}
       />
