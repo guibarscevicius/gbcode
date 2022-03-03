@@ -1,6 +1,8 @@
 import esbuild from 'esbuild-wasm'
 import { useState, useEffect, useRef } from 'react'
 
+import CodeEditor from './code-editor'
+
 import { unpkgPathPlugin } from '../plugins/unpkg-path-plugin'
 import { fetchPlugin } from '../plugins/fetch-plugin'
 import { cachePlugin } from '../plugins/cache-plugin'
@@ -60,10 +62,10 @@ const App = () => {
 
   return (
     <div>
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-      ></textarea>
+      <CodeEditor
+        initialValue={input}
+        onChange={v => v && setInput(v)}
+      />
 
       <div>
         <button onClick={onClick}>Submit</button>
