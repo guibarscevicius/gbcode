@@ -1,9 +1,12 @@
 import './code-editor.css'
 import { useRef } from 'react'
-import MonacoEditor from '@monaco-editor/react'
+import MonacoEditor, { OnMount } from '@monaco-editor/react'
 import monaco from 'monaco-editor'
 import prettier from 'prettier'
 import parser from 'prettier/parser-babel'
+import Highlighter from 'monaco-jsx-highlighter'
+import traverse from '@babel/traverse'
+import { parse } from '@babel/parser'
 
 interface CodeEditorProps {
   initialValue: string,
@@ -27,8 +30,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     editorRef.current.setValue(formatted)
   }
 
-  const onEditorMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
+  const onEditorMount: OnMount = (editor, monaco) => {
     editorRef.current = editor
+    
+    const highlighter = new Highlighter(monaco, parse, traverse, editor)
+    highlighter.highlightOnDidChangeModelContent()
   }
 
   return (
