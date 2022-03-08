@@ -1,8 +1,8 @@
 import esbuild from 'esbuild-wasm'
 
-import { unpkgPathPlugin } from '../plugins/unpkg-path-plugin'
-import { fetchPlugin } from '../plugins/fetch-plugin'
-import { cachePlugin } from '../plugins/cache-plugin'
+import { unpkgPathPlugin } from './plugins/unpkg-path-plugin'
+import { fetchPlugin } from './plugins/fetch-plugin'
+import { cachePlugin } from './plugins/cache-plugin'
 
 (async () => {
   await esbuild.initialize({
