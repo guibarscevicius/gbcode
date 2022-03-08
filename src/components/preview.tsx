@@ -10,10 +10,11 @@ const html = `
       <body>
         <div id="root"></div>
         <script>
-        window.addEventListener('message', (event) => {
+          window.addEventListener('message', (event) => {
             try {
               eval(event.data)
             } catch (err) {
+              console.error(err)
               document.querySelector('#root')
                 .innerHTML = '<div style="color: red">'
                    + '<h4>Runtime error</h4>'
@@ -30,7 +31,6 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
   const iframe = useRef<any>()
 
   useEffect(() => {
-    iframe.current.srcdoc = html
     iframe.current.contentWindow.postMessage(code, '*')
   }, [code])
 
