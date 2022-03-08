@@ -10,17 +10,15 @@ const html = `
       <body>
         <div id="root"></div>
         <script>
-          window.addEventListener('message', (event) => {
+        window.addEventListener('message', (event) => {
             try {
               eval(event.data)
-              console.log(event.data)
             } catch (err) {
               document.querySelector('#root')
                 .innerHTML = '<div style="color: red">'
                    + '<h4>Runtime error</h4>'
                    + '<p>' + err + '</p>'
                 + '</div>'
-              console.error(error)
             }
           }, false)
         </script>
