@@ -47,7 +47,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
       
       <MonacoEditor
         value={initialValue}
-        height="500px"
         theme="vs-dark"
         defaultLanguage="javascript"
         options={{
